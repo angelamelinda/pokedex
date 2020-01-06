@@ -1,13 +1,13 @@
 export const POKEMON_PAGE_LIMIT = 20;
 
-export const API_BASE_URL = "https://pokeapi.co/api/v2/";
+export const API_BASE_URL = "https://pokeapi.co/api/v2";
 
 export const API_URL = {
   ALL_POKEMON:
-    API_BASE_URL + "/pokemon?offset=:offset&limit=" + POKEMON_PAGE_LIMIT,
-  DETAIL: API_BASE_URL + "/pokemon/:id",
-  TYPE: API_BASE_URL + "/type",
-  TYPE_DETAIL: API_BASE_URL + "/type/:name"
+    API_BASE_URL + "/pokemon?offset=:offset&limit=" + POKEMON_PAGE_LIMIT + "/",
+  DETAIL: API_BASE_URL + "/pokemon/:id/",
+  TYPE: API_BASE_URL + "/type/",
+  TYPE_DETAIL: API_BASE_URL + "/type/:name/"
 };
 
 export const COLOR = {
