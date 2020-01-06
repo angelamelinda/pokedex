@@ -60,3 +60,5 @@ export type TPokemonAction =
 export interface IPokemonAction extends Action<E_POKEMON_ACTION> {
   payload?: TPokemonAction;
 }
+
+export type TAllAction = IPokemonAction | ICommonAction;

@@ -11,6 +11,7 @@ export interface IPokemonState {
   currentPage: number;
   pokemonList: IPokemon[] | null;
   pokemonDetail: IPokemon | null;
+  pokemonByType: IPokemon[] | null;
 }
 
 export interface IAppState {
