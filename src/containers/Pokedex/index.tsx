@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { fetchPokedex, fetchTypes } from "../../redux/actions/pokemon";
 import PokemonListItem from "../../components/PokemonListItem";
 import { POKEMON_PAGE_LIMIT } from "../../constants";
+import Filter from "../../components/Filter";
 
 interface IPokedex {
   state: IAppState;
@@ -50,13 +51,16 @@ class Pokedex extends PureComponent<IPokedex> {
 
     if (
       this.positionY + this.windowHeight === this.documentHeight &&
-      currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult
+      currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult &&
+      !filter
     ) {
-      if (filter) {
-        fetchPokedex();
-      } else {
-        // adjustPokedexByTypes();
-      }
+      fetchPokedex();
+    } else if (
+      this.positionY + this.windowHeight === this.documentHeight &&
+      currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult &&
+      filter
+    ) {
+      // adjustPokedexByTypes();
     }
   };
 
@@ -65,6 +69,8 @@ class Pokedex extends PureComponent<IPokedex> {
     this.documentHeight = (document.documentElement as HTMLElement).offsetHeight;
   };
 
+  handleChangeFilter = () => {};
+
   render() {
     const { pokemonReducer } = this.props.state;
 
@@ -72,6 +78,13 @@ class Pokedex extends PureComponent<IPokedex> {
       <PokedexWrapper>
         <PokedexContainer className="container">
           <PokedexTitle>Pokédex</PokedexTitle>
+          {pokemonReducer.allTypes && (
+            <Filter
+              types={pokemonReducer.allTypes}
+              handleChange={this.handleChangeFilter}
+              filter={pokemonReducer.filter || ""}
+            />
+          )}
           <PokedexRow className="row">
             {pokemonReducer.pokemonList &&
               pokemonReducer.pokemonList.map(pokemon => (

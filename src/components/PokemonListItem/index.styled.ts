@@ -52,7 +52,13 @@ export const PokemonListItemName = styled.h4`
   margin-bottom: 5px;
 `;
 
-export const PokemonListItemTypeWrapper = styled.div``;
+export const PokemonListItemTypeWrapper = styled.div`
+  :after {
+    content: "";
+    clear: both;
+    display: inline-block;
+  }
+`;
 
 export const PokemonListItemType = styled.div<{
   color: string;
