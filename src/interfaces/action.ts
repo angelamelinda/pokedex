@@ -27,7 +27,8 @@ export enum E_POKEMON_ACTION {
   POKEMON_SET_DETAIL = "POKEMON_SET_DETAIL",
   POKEMON_SET_TOTAL_RESULT = "POKEMON_SET_TOTAL_RESULT",
   POKEMON_SET_CURRENT_PAGE = "POKEMON_SET_CURRENT_PAGE",
-  POKEMON_SET_POKEDEX = "POKEMON_SET_POKEDEX"
+  POKEMON_SET_POKEDEX = "POKEMON_SET_POKEDEX",
+  POKEMON_SET_TYPES = "POKEMON_SET_TYPES"
 }
 
 export interface IPokemonSetFilter {
@@ -50,12 +51,17 @@ export interface IPokemonSetPokedex {
   pokemonList: IPokemon[] | null;
 }
 
+export interface IPokemonSetTypes {
+  types: string[];
+}
+
 export type TPokemonAction =
   | IPokemonSetFilter
   | IPokemonSetDetail
   | IPokemonSetTotalResult
   | IPokemonSetCurrentPage
-  | IPokemonSetPokedex;
+  | IPokemonSetPokedex
+  | IPokemonSetTypes;
 
 export interface IPokemonAction extends Action<E_POKEMON_ACTION> {
   payload?: TPokemonAction;

@@ -6,7 +6,8 @@ import {
   IPokemonSetTotalResult,
   IPokemonSetFilter,
   IPokemonSetDetail,
-  IPokemonSetPokedex
+  IPokemonSetPokedex,
+  IPokemonSetTypes
 } from "../../interfaces/action";
 
 export const INITIAL_STATE: IPokemonState = {
@@ -15,7 +16,8 @@ export const INITIAL_STATE: IPokemonState = {
   currentPage: 0,
   pokemonList: null,
   pokemonDetail: null,
-  pokemonByType: null
+  pokemonByType: null,
+  allTypes: []
 };
 
 function pokemonReducer(
@@ -32,6 +34,9 @@ function pokemonReducer(
     case E_POKEMON_ACTION.POKEMON_SET_FILTER:
       const { filter } = action.payload as IPokemonSetFilter;
       return { ...state, filter };
+    case E_POKEMON_ACTION.POKEMON_SET_TYPES:
+      const { types } = action.payload as IPokemonSetTypes;
+      return { ...state, allTypes: types };
     case E_POKEMON_ACTION.POKEMON_SET_DETAIL:
       const { pokemonDetail } = action.payload as IPokemonSetDetail;
       return { ...state, pokemonDetail };

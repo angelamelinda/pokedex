@@ -8,12 +8,14 @@ import {
 } from "./index.styled";
 import { IAppState } from "../../interfaces/state";
 import { connect } from "react-redux";
-import { fetchPokedex } from "../../redux/actions/pokemon";
+import { fetchPokedex, fetchTypes } from "../../redux/actions/pokemon";
 import PokemonListItem from "../../components/PokemonListItem";
+import { POKEMON_PAGE_LIMIT } from "../../constants";
 
 interface IPokedex {
   state: IAppState;
   fetchPokedex: () => void;
+  fetchTypes: () => void;
 }
 
 class Pokedex extends PureComponent<IPokedex> {
@@ -24,7 +26,9 @@ class Pokedex extends PureComponent<IPokedex> {
     .offsetHeight;
 
   componentDidMount() {
-    const { fetchPokedex } = this.props;
+    const { fetchPokedex, fetchTypes } = this.props;
+
+    fetchTypes();
     fetchPokedex();
 
     window.addEventListener("scroll", _.debounce(this.handleScroll));
@@ -38,19 +42,21 @@ class Pokedex extends PureComponent<IPokedex> {
 
   handleScroll = () => {
     const { fetchPokedex, state } = this.props;
-    const { filter } = state.pokemonReducer;
+    const { filter, currentPage, totalResult } = state.pokemonReducer;
 
     this.positionY = (document.documentElement as HTMLElement).scrollTop;
     this.windowHeight = window.innerHeight;
     this.documentHeight = (document.documentElement as HTMLElement).offsetHeight;
 
-    if (this.positionY + this.windowHeight === this.documentHeight && !filter) {
-      fetchPokedex();
-    } else if (
+    if (
       this.positionY + this.windowHeight === this.documentHeight &&
-      filter
+      currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult
     ) {
-      // adjustPokedexByTypes();
+      if (filter) {
+        fetchPokedex();
+      } else {
+        // adjustPokedexByTypes();
+      }
     }
   };
 
@@ -61,6 +67,7 @@ class Pokedex extends PureComponent<IPokedex> {
 
   render() {
     const { pokemonReducer } = this.props.state;
+
     return (
       <PokedexWrapper>
         <PokedexContainer className="container">
@@ -86,7 +93,8 @@ class Pokedex extends PureComponent<IPokedex> {
 const mapStateToProps = (state: IAppState) => ({ state });
 
 const mapDispatchToProps = {
-  fetchPokedex
+  fetchPokedex,
+  fetchTypes
 };
 
 export default connect(

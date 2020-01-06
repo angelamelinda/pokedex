@@ -55,6 +55,13 @@ export function setPokedex(pokemonList: IPokemon[] | null): IPokemonAction {
   };
 }
 
+export function setTypes(types: string[]): IPokemonAction {
+  return {
+    type: E_POKEMON_ACTION.POKEMON_SET_TYPES,
+    payload: { types }
+  };
+}
+
 export function resetPokemonState(): IPokemonAction {
   return {
     type: E_POKEMON_ACTION.POKEMON_RESET_STATE
@@ -109,13 +116,20 @@ export function fetchPokedex(): ThunkAction<void, IAppState, {}, TAllAction> {
   };
 }
 
-export function fetchPokemonImage(): ThunkAction<
-  void,
-  IAppState,
-  {},
-  TAllAction
-> {
-  return dispatch => {};
+export function fetchTypes(): ThunkAction<void, IAppState, {}, TAllAction> {
+  return dispatch => {
+    const apiRequest: IApiRequest = {
+      url: API_URL.TYPE,
+      method: "GET"
+    };
+    api(apiRequest).then(resp => {
+      const { results } = resp.data;
+      const types = (results as IPokemonCommonEntityResp[]).map(
+        type => type.name
+      );
+      dispatch(setTypes(types));
+    });
+  };
 }
 
 export function fetchPokemonBaseType(): ThunkAction<

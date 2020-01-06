@@ -12,6 +12,7 @@ export interface IPokemonState {
   pokemonList: IPokemon[] | null;
   pokemonDetail: IPokemon | null;
   pokemonByType: IPokemon[] | null;
+  allTypes: string[];
 }
 
 export interface IAppState {
