@@ -140,7 +140,7 @@ class PokemonDetail extends PureComponent<IPokemonDetail> {
 
           {commonReducer.error && <Error message={commonReducer.error} />}
 
-          {commonReducer.isLoading && (
+          {!pokemonDetail && commonReducer.isLoading && (
             <PokedexLoadingWrapper>
               <PokedexLoading>
                 <Loading color={COLOR.MINE_SHAFT} width={50} height={50} />
