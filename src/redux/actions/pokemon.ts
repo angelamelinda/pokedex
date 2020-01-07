@@ -6,7 +6,8 @@ import {
 import {
   IPokemon,
   IApiRequest,
-  IPokemonCommonEntityResp
+  IPokemonCommonEntityResp,
+  IPokemonListTypeResp
 } from "../../interfaces";
 import { ThunkAction } from "redux-thunk";
 import { IAppState } from "../../interfaces/state";
@@ -65,6 +66,21 @@ export function setTypes(types: string[]): IPokemonAction {
 export function resetPokemonState(): IPokemonAction {
   return {
     type: E_POKEMON_ACTION.POKEMON_RESET_STATE
+  };
+}
+
+export function resetPokedex(): IPokemonAction {
+  return {
+    type: E_POKEMON_ACTION.POKEMON_RESET_POKEDEX
+  };
+}
+
+export function setPokemonByType(
+  pokemonList: IPokemon[] | null
+): IPokemonAction {
+  return {
+    type: E_POKEMON_ACTION.POKEMON_SET_POKEMON_BY_TYPES,
+    payload: { pokemonList }
   };
 }
 
@@ -132,11 +148,66 @@ export function fetchTypes(): ThunkAction<void, IAppState, {}, TAllAction> {
   };
 }
 
-export function fetchPokemonBaseType(): ThunkAction<
+export function fetchPokemonBaseType(
+  type: string
+): ThunkAction<void, IAppState, {}, TAllAction> {
+  return (dispatch, getState) => {
+    dispatch(setLoading(true));
+    const apiRequest: IApiRequest = {
+      url: API_URL.TYPE_DETAIL.replace(":name", type),
+      method: "GET"
+    };
+    api(apiRequest)
+      .then(resp => {
+        const { pokemon: pokemonResp } = resp.data;
+
+        dispatch(setTotalResult(pokemonResp.length));
+
+        const urls = pokemonResp.map(
+          (pokemonList: IPokemonListTypeResp) => pokemonList.pokemon.url
+        );
+
+        promiseFetchAll(urls).then(responseAll => {
+          const { currentPage } = getState().pokemonReducer;
+          const result = responseAll.map(response =>
+            sanitizeDataPokemonDetail(response.data)
+          );
+          dispatch(setPokemonByType(result));
+          dispatch(
+            setPokedex(
+              result.slice(currentPage - 1, POKEMON_PAGE_LIMIT * currentPage)
+            )
+          );
+          dispatch(setCurrentPage(currentPage + 1));
+        });
+      })
+      .catch(_ => {
+        dispatch(setError(ERROR_MESSAGE.DEFAULT));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
+}
+
+export function adjustPokedexByTypes(): ThunkAction<
   void,
   IAppState,
   {},
   TAllAction
 > {
-  return dispatch => {};
+  return (dispatch, getState) => {
+    const { pokemonByType, currentPage } = getState().pokemonReducer;
+    if (pokemonByType) {
+      dispatch(
+        setPokedex(
+          pokemonByType.slice(
+            POKEMON_PAGE_LIMIT * currentPage - 1,
+            POKEMON_PAGE_LIMIT * (currentPage + 1)
+          )
+        )
+      );
+      dispatch(setCurrentPage(currentPage + 1));
+    }
+  };
 }

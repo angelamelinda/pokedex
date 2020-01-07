@@ -40,6 +40,11 @@ export interface IPokemonTypeResp {
   type: IPokemonCommonEntityResp;
 }
 
+export interface IPokemonListTypeResp {
+  slot: number;
+  pokemon: IPokemonCommonEntityResp;
+}
+
 export interface IPokemonAbilitiyResp {
   slot: number;
   ability: IPokemonCommonEntityResp;

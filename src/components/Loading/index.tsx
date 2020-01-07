@@ -1,17 +1,19 @@
 import React, { FC } from "react";
+import { COLOR } from "../../constants";
 
 interface ILoading {
   width?: number;
   height?: number;
+  color?: string;
 }
 
-const Loading: FC<ILoading> = ({ width, height }) => {
+const Loading: FC<ILoading> = ({ width, height, color }) => {
   return (
     <svg
       data-testid="loading"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      style={{ margin: "auto", background: "#fff", display: "block" }}
+      style={{ margin: "auto", background: "transparent", display: "block" }}
       width={width || 50}
       height={height || 50}
       viewBox="0 0 100 100"
@@ -24,7 +26,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -43,7 +45,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -62,7 +64,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -81,7 +83,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -100,7 +102,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -119,7 +121,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -138,7 +140,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -157,7 +159,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -176,7 +178,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -195,7 +197,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"
@@ -214,7 +216,7 @@ const Loading: FC<ILoading> = ({ width, height }) => {
           ry="4.62"
           width={8}
           height={11}
-          fill="#3a8ff3">
+          fill={color || COLOR.WHITE}>
           <animate
             attributeName="opacity"
             values="1;0"

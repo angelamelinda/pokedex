@@ -1,22 +1,43 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, ChangeEvent } from "react";
 import _ from "lodash";
 import {
   PokedexWrapper,
   PokedexContainer,
   PokedexTitle,
-  PokedexRow
+  PokedexRow,
+  PokedexFilter,
+  PokedexFilterText,
+  PokedexTitleWrapper,
+  PokedexLoadingWrapper,
+  PokedexLoading
 } from "./index.styled";
 import { IAppState } from "../../interfaces/state";
 import { connect } from "react-redux";
-import { fetchPokedex, fetchTypes } from "../../redux/actions/pokemon";
+import {
+  fetchPokedex,
+  fetchTypes,
+  setFilter,
+  fetchPokemonBaseType,
+  setCurrentPage,
+  setTotalResult,
+  resetPokedex,
+  adjustPokedexByTypes
+} from "../../redux/actions/pokemon";
 import PokemonListItem from "../../components/PokemonListItem";
-import { POKEMON_PAGE_LIMIT } from "../../constants";
+import { POKEMON_PAGE_LIMIT, COLOR } from "../../constants";
 import Filter from "../../components/Filter";
+import Loading from "../../components/Loading";
 
 interface IPokedex {
   state: IAppState;
   fetchPokedex: () => void;
   fetchTypes: () => void;
+  setFilter: (filter: string) => void;
+  fetchPokemonBaseType: (type: string) => void;
+  setCurrentPage: (currentPage: number) => void;
+  setTotalResult: (totalResult: number) => void;
+  resetPokedex: () => void;
+  adjustPokedexByTypes: () => void;
 }
 
 class Pokedex extends PureComponent<IPokedex> {
@@ -42,7 +63,7 @@ class Pokedex extends PureComponent<IPokedex> {
   }
 
   handleScroll = () => {
-    const { fetchPokedex, state } = this.props;
+    const { fetchPokedex, state, adjustPokedexByTypes } = this.props;
     const { filter, currentPage, totalResult } = state.pokemonReducer;
 
     this.positionY = (document.documentElement as HTMLElement).scrollTop;
@@ -60,7 +81,7 @@ class Pokedex extends PureComponent<IPokedex> {
       currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult &&
       filter
     ) {
-      // adjustPokedexByTypes();
+      adjustPokedexByTypes();
     }
   };
 
@@ -69,22 +90,42 @@ class Pokedex extends PureComponent<IPokedex> {
     this.documentHeight = (document.documentElement as HTMLElement).offsetHeight;
   };
 
-  handleChangeFilter = () => {};
+  handleChangeFilter = (e: ChangeEvent<HTMLSelectElement>) => {
+    const {
+      setFilter,
+      fetchPokemonBaseType,
+      resetPokedex,
+      setCurrentPage,
+      setTotalResult
+    } = this.props;
+    setFilter(e.target.value);
+    setCurrentPage(1);
+    setTotalResult(0);
+    resetPokedex();
+    fetchPokemonBaseType(e.target.value);
+  };
 
   render() {
-    const { pokemonReducer } = this.props.state;
-
+    const { pokemonReducer, commonReducer } = this.props.state;
     return (
-      <PokedexWrapper>
+      <PokedexWrapper
+        className={commonReducer.isLoading ? "overflow-hidden" : ""}>
         <PokedexContainer className="container">
-          <PokedexTitle>Pokédex</PokedexTitle>
-          {pokemonReducer.allTypes && (
-            <Filter
-              types={pokemonReducer.allTypes}
-              handleChange={this.handleChangeFilter}
-              filter={pokemonReducer.filter || ""}
-            />
-          )}
+          <PokedexTitleWrapper>
+            <PokedexTitle>Pokédex</PokedexTitle>
+            <PokedexFilter>
+              {pokemonReducer.allTypes && (
+                <>
+                  <PokedexFilterText>Filter by Types</PokedexFilterText>
+                  <Filter
+                    types={pokemonReducer.allTypes}
+                    handleChange={this.handleChangeFilter}
+                    filter={pokemonReducer.filter || ""}
+                  />
+                </>
+              )}
+            </PokedexFilter>
+          </PokedexTitleWrapper>
           <PokedexRow className="row">
             {pokemonReducer.pokemonList &&
               pokemonReducer.pokemonList.map(pokemon => (
@@ -97,6 +138,13 @@ class Pokedex extends PureComponent<IPokedex> {
                 />
               ))}
           </PokedexRow>
+          {commonReducer.isLoading && (
+            <PokedexLoadingWrapper>
+              <PokedexLoading>
+                <Loading color={COLOR.MINE_SHAFT} width={50} height={50} />
+              </PokedexLoading>
+            </PokedexLoadingWrapper>
+          )}
         </PokedexContainer>
       </PokedexWrapper>
     );
@@ -107,7 +155,13 @@ const mapStateToProps = (state: IAppState) => ({ state });
 
 const mapDispatchToProps = {
   fetchPokedex,
-  fetchTypes
+  fetchTypes,
+  setFilter,
+  fetchPokemonBaseType,
+  setCurrentPage,
+  setTotalResult,
+  resetPokedex,
+  adjustPokedexByTypes
 };
 
 export default connect(

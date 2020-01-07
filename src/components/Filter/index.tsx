@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React, { FC, ChangeEvent } from "react";
 import { FilterSelect, FilterSelectItem } from "./index.styled";
 
 interface IFilter {
-  handleChange: () => void;
+  handleChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   types: string[];
   filter: string;
 }
@@ -10,8 +10,10 @@ interface IFilter {
 const Filter: FC<IFilter> = ({ types, handleChange, filter }) => {
   return (
     <FilterSelect onChange={handleChange} value={filter}>
-      {types.map(type => (
-        <FilterSelectItem value={type}>{type}</FilterSelectItem>
+      {types.map((type, idx) => (
+        <FilterSelectItem key={idx} value={type}>
+          {type}
+        </FilterSelectItem>
       ))}
     </FilterSelect>
   );

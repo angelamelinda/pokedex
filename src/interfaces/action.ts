@@ -28,7 +28,9 @@ export enum E_POKEMON_ACTION {
   POKEMON_SET_TOTAL_RESULT = "POKEMON_SET_TOTAL_RESULT",
   POKEMON_SET_CURRENT_PAGE = "POKEMON_SET_CURRENT_PAGE",
   POKEMON_SET_POKEDEX = "POKEMON_SET_POKEDEX",
-  POKEMON_SET_TYPES = "POKEMON_SET_TYPES"
+  POKEMON_SET_TYPES = "POKEMON_SET_TYPES",
+  POKEMON_SET_POKEMON_BY_TYPES = "POKEMON_SET_POKEMON_BY_TYPES",
+  POKEMON_RESET_POKEDEX = "POKEMON_RESET_POKEDEX"
 }
 
 export interface IPokemonSetFilter {
@@ -48,6 +50,10 @@ export interface IPokemonSetCurrentPage {
 }
 
 export interface IPokemonSetPokedex {
+  pokemonList: IPokemon[] | null;
+}
+
+export interface IPokemonSetPokemonByTypes {
   pokemonList: IPokemon[] | null;
 }
 
