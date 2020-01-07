@@ -29,9 +29,10 @@ import {
 } from "../../redux/actions/pokemon";
 import { PokedexLoadingWrapper, PokedexLoading } from "../Pokedex/index.styled";
 import Loading from "../../components/Loading";
-import { COLOR, TYPE_CONFIG } from "../../constants";
+import { COLOR, TYPE_CONFIG, ERROR_MESSAGE } from "../../constants";
 import IndicatorStats from "../../components/IndicatorStats";
 import BackButton from "../../components/BackButton";
+import Error from "../../components/Error";
 
 interface IPokemonDetail extends RouteComponentProps<IPokemonDetailRoute> {
   state: IAppState;
@@ -98,13 +99,11 @@ class PokemonDetail extends PureComponent<IPokemonDetail> {
                         Abilities:
                       </PokemonDetailAbilityTitle>
                       <PokemonDetailAbilityUl>
-                        {pokemonDetail.abilities.map(ability => {
-                          return (
-                            <PokemonDetailAbilityLi>
-                              {ability}
-                            </PokemonDetailAbilityLi>
-                          );
-                        })}
+                        {pokemonDetail.abilities.map((ability, index) => (
+                          <PokemonDetailAbilityLi key={"ability-" + index}>
+                            {ability}
+                          </PokemonDetailAbilityLi>
+                        ))}
                       </PokemonDetailAbilityUl>
                     </PokemonDetailAbility>
                     <PokemonDetailTypeWrapper>
@@ -125,8 +124,9 @@ class PokemonDetail extends PureComponent<IPokemonDetail> {
                       <PokemonDetailSubtitle>
                         Pokemon Stats
                       </PokemonDetailSubtitle>
-                      {pokemonDetail.stats.map(item => (
+                      {pokemonDetail.stats.map((item, index) => (
                         <IndicatorStats
+                          key={"indicator-" + index}
                           name={item.stat.name}
                           baseStat={item.base_stat}
                         />
@@ -137,6 +137,9 @@ class PokemonDetail extends PureComponent<IPokemonDetail> {
               </PokemonDetailContent>
             </>
           )}
+
+          {commonReducer.error && <Error message={commonReducer.error} />}
+
           {commonReducer.isLoading && (
             <PokedexLoadingWrapper>
               <PokedexLoading>

@@ -24,7 +24,8 @@ import {
   adjustPokedexByTypes
 } from "../../redux/actions/pokemon";
 import PokemonListItem from "../../components/PokemonListItem";
-import { POKEMON_PAGE_LIMIT, COLOR } from "../../constants";
+import { POKEMON_PAGE_LIMIT, COLOR, ERROR_MESSAGE } from "../../constants";
+import Error from "../../components/Error";
 import Filter from "../../components/Filter";
 import Loading from "../../components/Loading";
 
@@ -138,12 +139,17 @@ class Pokedex extends PureComponent<IPokedex> {
               )}
             </PokedexFilter>
           </PokedexTitleWrapper>
-          <PokedexRow className="row">
-            {pokemonReducer.pokemonList &&
-              pokemonReducer.pokemonList.map((pokemon, index) => (
+
+          {pokemonReducer.pokemonList && pokemonReducer.pokemonList.length > 0 && (
+            <PokedexRow className="row">
+              {pokemonReducer.pokemonList.map((pokemon, index) => (
                 <PokemonListItem key={`pokemon-${index}`} pokemon={pokemon} />
               ))}
-          </PokedexRow>
+            </PokedexRow>
+          )}
+
+          {commonReducer.error && <Error message={commonReducer.error} />}
+
           {commonReducer.isLoading && (
             <PokedexLoadingWrapper>
               <PokedexLoading>

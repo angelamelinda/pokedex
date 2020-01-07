@@ -133,8 +133,14 @@ export function fetchPokedex(): ThunkAction<void, IAppState, {}, TAllAction> {
             const result = responseAll.map(response =>
               sanitizeDataPokemonDetail(response.data)
             );
-            dispatch(setPokedex(result));
-            dispatch(setCurrentPage(getState().pokemonReducer.currentPage + 1));
+            if (result && result.length > 0) {
+              dispatch(setPokedex(result));
+              dispatch(
+                setCurrentPage(getState().pokemonReducer.currentPage + 1)
+              );
+            } else {
+              dispatch(setError(ERROR_MESSAGE.POKEMON_NOT_FOUND));
+            }
           })
           .catch(_ => {
             dispatch(setError(ERROR_MESSAGE.DEFAULT));
@@ -199,13 +205,21 @@ export function fetchPokemonBaseType(
             const result = responseAll.map(response =>
               sanitizeDataPokemonDetail(response.data)
             );
-            dispatch(setPokemonByType(result));
-            dispatch(
-              setPokedex(
-                result.slice(currentPage - 1, POKEMON_PAGE_LIMIT * currentPage)
-              )
-            );
-            dispatch(setCurrentPage(currentPage + 1));
+
+            if (result && result.length > 0) {
+              dispatch(setPokemonByType(result));
+              dispatch(
+                setPokedex(
+                  result.slice(
+                    currentPage - 1,
+                    POKEMON_PAGE_LIMIT * currentPage
+                  )
+                )
+              );
+              dispatch(setCurrentPage(currentPage + 1));
+            } else {
+              dispatch(setError(ERROR_MESSAGE.POKEMON_NOT_FOUND));
+            }
           })
           .catch(_ => {
             dispatch(setError(ERROR_MESSAGE.DEFAULT));

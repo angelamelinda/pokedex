@@ -18,7 +18,8 @@ export const COLOR = {
   CUPID: "#fdb9e9",
   MINE_SHAFT: "#212121",
   PUMPKIN: "#fd7d24",
-  CONCRETE: "#F2F2F2"
+  CONCRETE: "#F2F2F2",
+  RED: "#E00"
 };
 
 export const TYPE_CONFIG = {
@@ -97,5 +98,6 @@ export const TYPE_CONFIG = {
 };
 
 export const ERROR_MESSAGE = {
-  DEFAULT: "Sorry, something went wrong! Please try again!"
+  DEFAULT: "Sorry, something went wrong! Please try again!",
+  POKEMON_NOT_FOUND: "Sorry, pokemon not found!"
 };
