@@ -1,11 +1,6 @@
 import styled from "styled-components";
 
-export const PokedexWrapper = styled.div`
-  &.overflow-hidden {
-    height: 100%;
-    overflow: hidden;
-  }
-`;
+export const PokedexWrapper = styled.div``;
 
 export const PokedexContainer = styled.div``;
 
@@ -48,6 +43,7 @@ export const PokedexLoadingWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
 `;
 
 export const PokedexLoading = styled.div``;

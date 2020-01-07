@@ -72,14 +72,14 @@ class Pokedex extends PureComponent<IPokedex> {
     this.documentHeight = (document.documentElement as HTMLElement).offsetHeight;
 
     if (
-      this.positionY + this.windowHeight >= this.documentHeight - 20 &&
+      this.positionY + this.windowHeight >= this.documentHeight - 10 &&
       currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult &&
       !filter &&
       !isLoading
     ) {
       fetchPokedex();
     } else if (
-      this.positionY + this.windowHeight >= this.documentHeight - 20 &&
+      this.positionY + this.windowHeight >= this.documentHeight - 10 &&
       currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult &&
       filter &&
       !isLoading
@@ -121,8 +121,7 @@ class Pokedex extends PureComponent<IPokedex> {
   render() {
     const { pokemonReducer, commonReducer } = this.props.state;
     return (
-      <PokedexWrapper
-        className={commonReducer.isLoading ? "overflow-hidden" : ""}>
+      <PokedexWrapper>
         <PokedexContainer className="container">
           <PokedexTitleWrapper>
             <PokedexTitle>Pokédex</PokedexTitle>
@@ -142,13 +141,7 @@ class Pokedex extends PureComponent<IPokedex> {
           <PokedexRow className="row">
             {pokemonReducer.pokemonList &&
               pokemonReducer.pokemonList.map((pokemon, index) => (
-                <PokemonListItem
-                  key={`pokemon-${index}`}
-                  types={pokemon.types}
-                  id={pokemon.id}
-                  name={pokemon.name}
-                  image={pokemon.sprites.front_default}
-                />
+                <PokemonListItem key={`pokemon-${index}`} pokemon={pokemon} />
               ))}
           </PokedexRow>
           {commonReducer.isLoading && (
