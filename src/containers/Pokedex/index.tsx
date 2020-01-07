@@ -53,33 +53,36 @@ class Pokedex extends PureComponent<IPokedex> {
     fetchTypes();
     fetchPokedex();
 
-    window.addEventListener("scroll", _.debounce(this.handleScroll));
-    window.addEventListener("resize", _.debounce(this.handleResize));
+    window.addEventListener("scroll", _.throttle(this.handleScroll, 500));
+    window.addEventListener("resize", _.throttle(this.handleResize, 500));
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", _.debounce(this.handleScroll));
-    window.removeEventListener("resize", _.debounce(this.handleResize));
+    window.removeEventListener("scroll", _.throttle(this.handleScroll, 500));
+    window.removeEventListener("resize", _.throttle(this.handleResize, 500));
   }
 
   handleScroll = () => {
     const { fetchPokedex, state, adjustPokedexByTypes } = this.props;
     const { filter, currentPage, totalResult } = state.pokemonReducer;
+    const { isLoading } = state.commonReducer;
 
     this.positionY = (document.documentElement as HTMLElement).scrollTop;
     this.windowHeight = window.innerHeight;
     this.documentHeight = (document.documentElement as HTMLElement).offsetHeight;
 
     if (
-      this.positionY + this.windowHeight === this.documentHeight &&
+      this.positionY + this.windowHeight >= this.documentHeight - 20 &&
       currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult &&
-      !filter
+      !filter &&
+      !isLoading
     ) {
       fetchPokedex();
     } else if (
-      this.positionY + this.windowHeight === this.documentHeight &&
+      this.positionY + this.windowHeight >= this.documentHeight - 20 &&
       currentPage * POKEMON_PAGE_LIMIT + 1 < totalResult &&
-      filter
+      filter &&
+      !isLoading
     ) {
       adjustPokedexByTypes();
     }
@@ -128,9 +131,9 @@ class Pokedex extends PureComponent<IPokedex> {
           </PokedexTitleWrapper>
           <PokedexRow className="row">
             {pokemonReducer.pokemonList &&
-              pokemonReducer.pokemonList.map(pokemon => (
+              pokemonReducer.pokemonList.map((pokemon, index) => (
                 <PokemonListItem
-                  key={pokemon.id}
+                  key={`pokemon-${index}`}
                   types={pokemon.types}
                   id={pokemon.id}
                   name={pokemon.name}
