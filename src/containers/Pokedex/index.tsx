@@ -32,7 +32,7 @@ interface IPokedex {
   state: IAppState;
   fetchPokedex: () => void;
   fetchTypes: () => void;
-  setFilter: (filter: string) => void;
+  setFilter: (filter: string | null) => void;
   fetchPokemonBaseType: (type: string) => void;
   setCurrentPage: (currentPage: number) => void;
   setTotalResult: (totalResult: number) => void;
@@ -99,13 +99,23 @@ class Pokedex extends PureComponent<IPokedex> {
       fetchPokemonBaseType,
       resetPokedex,
       setCurrentPage,
-      setTotalResult
+      setTotalResult,
+      fetchPokedex
     } = this.props;
-    setFilter(e.target.value);
-    setCurrentPage(1);
-    setTotalResult(0);
-    resetPokedex();
-    fetchPokemonBaseType(e.target.value);
+    const { value } = e.target;
+    if (value !== "default") {
+      setFilter(value);
+      setCurrentPage(1);
+      setTotalResult(0);
+      resetPokedex();
+      fetchPokemonBaseType(e.target.value);
+    } else {
+      setFilter(null);
+      setCurrentPage(0);
+      setTotalResult(0);
+      resetPokedex();
+      fetchPokedex();
+    }
   };
 
   render() {

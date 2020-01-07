@@ -10,6 +10,7 @@ interface IFilter {
 const Filter: FC<IFilter> = ({ types, handleChange, filter }) => {
   return (
     <FilterSelect onChange={handleChange} value={filter}>
+      <FilterSelectItem value={"default"}>default</FilterSelectItem>
       {types.map((type, idx) => (
         <FilterSelectItem key={idx} value={type}>
           {type}
