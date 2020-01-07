@@ -10,20 +10,31 @@ import {
 } from "./index.styled";
 import { Link } from "react-router-dom";
 import { TYPE_CONFIG } from "../../constants";
+import { IPokemon } from "../../interfaces";
+import { setPokemonDetail } from "../../redux/actions/pokemon";
+import { connect } from "react-redux";
+import { IAppState } from "../../interfaces/state";
 
 interface IPokemonListeItem {
-  image: string | null;
-  name: string;
-  id: number;
-  types: string[];
+  pokemon: IPokemon;
+  setPokemonDetail: (pokemon: IPokemon) => void;
 }
 
-const PokemonListItem: FC<IPokemonListeItem> = ({ image, name, id, types }) => {
+const PokemonListItem: FC<IPokemonListeItem> = ({
+  pokemon,
+  setPokemonDetail
+}) => {
+  const { sprites, types, id, name } = pokemon;
   return (
     <PokemonListItemColumn className="column">
-      <Link to={`/${id}`} className="pokemon-list-item__link">
+      <Link
+        to={`/${id}`}
+        className="pokemon-list-item__link"
+        onClick={() => setPokemonDetail(pokemon)}>
         <PokemonListItemImageWrapper>
-          {image && <PokemonListItemImage alt="" src={image} />}
+          {sprites && sprites.front_default && (
+            <PokemonListItemImage alt="" src={sprites.front_default} />
+          )}
         </PokemonListItemImageWrapper>
         <PokemonListItemBottom>
           <PokemonListItemName>{name}</PokemonListItemName>
@@ -47,4 +58,13 @@ const PokemonListItem: FC<IPokemonListeItem> = ({ image, name, id, types }) => {
   );
 };
 
-export default PokemonListItem;
+const mapStateToProps = (state: IAppState) => ({ state });
+
+const mapDispatchToProps = {
+  setPokemonDetail
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PokemonListItem);
