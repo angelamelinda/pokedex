@@ -24,7 +24,7 @@ import {
   adjustPokedexByTypes
 } from "../../redux/actions/pokemon";
 import PokemonListItem from "../../components/PokemonListItem";
-import { POKEMON_PAGE_LIMIT, COLOR, ERROR_MESSAGE } from "../../constants";
+import { POKEMON_PAGE_LIMIT, COLOR } from "../../constants";
 import Error from "../../components/Error";
 import Filter from "../../components/Filter";
 import Loading from "../../components/Loading";
@@ -122,7 +122,7 @@ class Pokedex extends PureComponent<IPokedex> {
   render() {
     const { pokemonReducer, commonReducer } = this.props.state;
     return (
-      <PokedexWrapper>
+      <PokedexWrapper data-testid="pokedex-page">
         <PokedexContainer className="container">
           <PokedexTitleWrapper>
             <PokedexTitle>Pokédex</PokedexTitle>

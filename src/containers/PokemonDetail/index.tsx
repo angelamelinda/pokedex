@@ -29,7 +29,7 @@ import {
 } from "../../redux/actions/pokemon";
 import { PokedexLoadingWrapper, PokedexLoading } from "../Pokedex/index.styled";
 import Loading from "../../components/Loading";
-import { COLOR, TYPE_CONFIG, ERROR_MESSAGE } from "../../constants";
+import { COLOR, TYPE_CONFIG } from "../../constants";
 import IndicatorStats from "../../components/IndicatorStats";
 import BackButton from "../../components/BackButton";
 import Error from "../../components/Error";
@@ -69,7 +69,7 @@ class PokemonDetail extends PureComponent<IPokemonDetail> {
     const { commonReducer, pokemonReducer } = state;
     const { pokemonDetail } = pokemonReducer;
     return (
-      <PokemonDetailWrapper>
+      <PokemonDetailWrapper data-testid="pokemon-detail-page">
         <PokemonDetailContainer className="container">
           {pokemonDetail && (
             <>
