@@ -84,13 +84,26 @@ export function setPokemonByType(
   };
 }
 
-export function fetchPokemonDetail(): ThunkAction<
-  void,
-  IAppState,
-  {},
-  TAllAction
-> {
-  return dispatch => {};
+export function fetchPokemonDetail(
+  pokemonId: string
+): ThunkAction<void, IAppState, {}, TAllAction> {
+  return dispatch => {
+    const apiRequest: IApiRequest = {
+      url: API_URL.DETAIL.replace(":id", pokemonId),
+      method: "GET"
+    };
+    api(apiRequest)
+      .then(resp => {
+        const result = sanitizeDataPokemonDetail(resp.data);
+        dispatch(setPokemonDetail(result));
+      })
+      .catch(_ => {
+        dispatch(setError(ERROR_MESSAGE.DEFAULT));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
 }
 
 export function fetchPokedex(): ThunkAction<void, IAppState, {}, TAllAction> {
@@ -115,19 +128,28 @@ export function fetchPokedex(): ThunkAction<void, IAppState, {}, TAllAction> {
           (pokemon: IPokemonCommonEntityResp) => pokemon.url
         );
 
-        promiseFetchAll(urls).then(responseAll => {
-          const result = responseAll.map(response =>
-            sanitizeDataPokemonDetail(response.data)
-          );
-          dispatch(setPokedex(result));
-          dispatch(setCurrentPage(getState().pokemonReducer.currentPage + 1));
-        });
+        promiseFetchAll(urls)
+          .then(responseAll => {
+            const result = responseAll.map(response =>
+              sanitizeDataPokemonDetail(response.data)
+            );
+            dispatch(setPokedex(result));
+            dispatch(setCurrentPage(getState().pokemonReducer.currentPage + 1));
+          })
+          .catch(_ => {
+            dispatch(setError(ERROR_MESSAGE.DEFAULT));
+          })
+          .finally(() => {
+            setTimeout(() => {
+              dispatch(setLoading(false));
+            }, 200);
+          });
       })
       .catch(_ => {
         dispatch(setError(ERROR_MESSAGE.DEFAULT));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
+        setTimeout(() => {
+          dispatch(setLoading(false));
+        }, 200);
       });
   };
 }
@@ -138,13 +160,17 @@ export function fetchTypes(): ThunkAction<void, IAppState, {}, TAllAction> {
       url: API_URL.TYPE,
       method: "GET"
     };
-    api(apiRequest).then(resp => {
-      const { results } = resp.data;
-      const types = (results as IPokemonCommonEntityResp[]).map(
-        type => type.name
-      );
-      dispatch(setTypes(types));
-    });
+    api(apiRequest)
+      .then(resp => {
+        const { results } = resp.data;
+        const types = (results as IPokemonCommonEntityResp[]).map(
+          type => type.name
+        );
+        dispatch(setTypes(types));
+      })
+      .catch(_ => {
+        dispatch(setError(ERROR_MESSAGE.DEFAULT));
+      });
   };
 }
 
@@ -167,25 +193,34 @@ export function fetchPokemonBaseType(
           (pokemonList: IPokemonListTypeResp) => pokemonList.pokemon.url
         );
 
-        promiseFetchAll(urls).then(responseAll => {
-          const { currentPage } = getState().pokemonReducer;
-          const result = responseAll.map(response =>
-            sanitizeDataPokemonDetail(response.data)
-          );
-          dispatch(setPokemonByType(result));
-          dispatch(
-            setPokedex(
-              result.slice(currentPage - 1, POKEMON_PAGE_LIMIT * currentPage)
-            )
-          );
-          dispatch(setCurrentPage(currentPage + 1));
-        });
+        promiseFetchAll(urls)
+          .then(responseAll => {
+            const { currentPage } = getState().pokemonReducer;
+            const result = responseAll.map(response =>
+              sanitizeDataPokemonDetail(response.data)
+            );
+            dispatch(setPokemonByType(result));
+            dispatch(
+              setPokedex(
+                result.slice(currentPage - 1, POKEMON_PAGE_LIMIT * currentPage)
+              )
+            );
+            dispatch(setCurrentPage(currentPage + 1));
+          })
+          .catch(_ => {
+            dispatch(setError(ERROR_MESSAGE.DEFAULT));
+          })
+          .finally(() => {
+            setTimeout(() => {
+              dispatch(setLoading(false));
+            }, 200);
+          });
       })
       .catch(_ => {
         dispatch(setError(ERROR_MESSAGE.DEFAULT));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
+        setTimeout(() => {
+          dispatch(setLoading(false));
+        }, 200);
       });
   };
 }
@@ -198,6 +233,7 @@ export function adjustPokedexByTypes(): ThunkAction<
 > {
   return (dispatch, getState) => {
     const { pokemonByType, currentPage } = getState().pokemonReducer;
+    dispatch(setLoading(true));
     if (pokemonByType) {
       dispatch(
         setPokedex(
@@ -208,6 +244,9 @@ export function adjustPokedexByTypes(): ThunkAction<
         )
       );
       dispatch(setCurrentPage(currentPage + 1));
+      setTimeout(() => {
+        dispatch(setLoading(false));
+      }, 200);
     }
   };
 }

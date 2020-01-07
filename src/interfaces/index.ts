@@ -10,11 +10,6 @@ export interface IPokemonSprites {
   front_default: string | null;
 }
 
-export interface IPokemonStat {
-  name: string;
-  base_stat: number;
-}
-
 export interface IPokemon {
   id: number;
   name: string;
@@ -23,7 +18,7 @@ export interface IPokemon {
   sprites: IPokemonSprites;
   weight: number;
   height: number;
-  stats: IPokemonStat[];
+  stats: IPokemonStatsResp[];
 }
 
 export interface IResponse {
@@ -33,6 +28,11 @@ export interface IResponse {
 export interface IPokemonCommonEntityResp {
   url: string;
   name: string;
+}
+
+export interface IPokemonStatsResp {
+  base_stat: number;
+  stat: IPokemonCommonEntityResp;
 }
 
 export interface IPokemonTypeResp {
@@ -58,5 +58,9 @@ export interface IPokemonResp {
   sprites: IPokemonSprites;
   weight: number;
   height: number;
-  stats: IPokemonStat[];
+  stats: IPokemonStatsResp[];
+}
+
+export interface IPokemonDetailRoute {
+  pokemonId: string;
 }
